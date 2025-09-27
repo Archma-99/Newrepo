@@ -4,9 +4,9 @@ import pandas as pd
 from datetime import datetime
 
 # Import ingestion functions from other modules
-from data_ingestion import fetch_and_process_time_series_data
-from news_ingestion import fetch_and_analyze_news
-from social_media_ingestion import fetch_and_analyze_reddit_data
+from .data_ingestion import fetch_and_process_time_series_data
+from .news_ingestion import fetch_and_analyze_news
+from .social_media_ingestion import fetch_and_analyze_reddit_data
 
 def get_db_connection():
     """Establishes a connection to the PostgreSQL database."""
