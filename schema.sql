@@ -1,38 +1,65 @@
--- Database schema for the Multi-Modal Crypto Prediction System
+DROP TABLE IF EXISTS prices, news, social_posts, onchain, predictions, system_logs CASCADE;
 
--- Table for quantitative features from time-series data
-CREATE TABLE time_series_data (
+-- 1. Market prices (BTC/USDT etc.)
+CREATE TABLE prices (
     id SERIAL PRIMARY KEY,
-    crypto_symbol VARCHAR(10) NOT NULL,
-    timestamp TIMESTAMP WITHOUT TIME ZONE UNIQUE NOT NULL,
-    close_price NUMERIC NOT NULL,
-    volume NUMERIC NOT NULL,
-    rsi_14 NUMERIC,
-    macd NUMERIC,
-    bollinger_high NUMERIC,
-    bollinger_low NUMERIC,
-    atr NUMERIC,
-    sma_50 NUMERIC,
-    ema_20 NUMERIC
+    timestamp TIMESTAMPTZ NOT NULL,
+    exchange TEXT NOT NULL,            -- e.g., Binance, Coinbase
+    pair TEXT NOT NULL,                -- e.g., BTC/USDT
+    open NUMERIC,
+    high NUMERIC,
+    low NUMERIC,
+    close NUMERIC,
+    volume NUMERIC,
+    UNIQUE(exchange, pair, timestamp)
 );
 
--- Table for qualitative features from unstructured data
-CREATE TABLE sentiment_features (
+-- 2. News articles
+CREATE TABLE news (
     id SERIAL PRIMARY KEY,
-    crypto_symbol VARCHAR(10) NOT NULL,
-    timestamp TIMESTAMP WITHOUT TIME ZONE UNIQUE NOT NULL,
-    social_volume INT,
-    social_sentiment_net NUMERIC,
-    news_count INT,
-    news_sentiment_avg NUMERIC,
-    CONSTRAINT fk_time_series
-        FOREIGN KEY(timestamp, crypto_symbol)
-        REFERENCES time_series_data(timestamp, crypto_symbol)
-        ON DELETE CASCADE
+    timestamp TIMESTAMPTZ NOT NULL,
+    source TEXT NOT NULL,              -- e.g., CNBC, CryptoNews
+    title TEXT NOT NULL,
+    url TEXT NOT NULL UNIQUE,
+    content TEXT,
+    sentiment_score NUMERIC            -- -1 (negative) to +1 (positive)
 );
 
--- Create a composite index on time_series_data for faster lookups
-CREATE INDEX idx_ts_crypto_timestamp ON time_series_data(crypto_symbol, timestamp DESC);
+-- 3. Social media posts (Twitter/Reddit)
+CREATE TABLE social_posts (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMPTZ NOT NULL,
+    platform TEXT NOT NULL,            -- Twitter, Reddit
+    author TEXT,
+    content TEXT,
+    sentiment_score NUMERIC,
+    url TEXT UNIQUE
+);
 
--- Create a composite index on sentiment_features for faster lookups
-CREATE INDEX idx_sf_crypto_timestamp ON sentiment_features(crypto_symbol, timestamp DESC);
+-- 4. On-chain data
+CREATE TABLE onchain (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMPTZ NOT NULL,
+    metric TEXT NOT NULL,              -- active_addresses, hashrate, tx_volume
+    value NUMERIC,
+    UNIQUE(metric, timestamp)
+);
+
+-- 5. Predictions
+CREATE TABLE predictions (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMPTZ NOT NULL,
+    model_name TEXT NOT NULL,          -- e.g., LSTM, Transformer, Ensemble
+    timeframe TEXT NOT NULL,           -- 1min, 5min, 1h, 1d
+    predicted_price NUMERIC,
+    confidence NUMERIC,                -- 0-1
+    signal TEXT                        -- Buy, Sell, Hold
+);
+
+-- 6. System logs (optional, for debugging)
+CREATE TABLE system_logs (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMPTZ DEFAULT NOW(),
+    level TEXT NOT NULL,               -- INFO, WARNING, ERROR
+    message TEXT
+);
