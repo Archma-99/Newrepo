@@ -7,4 +7,3 @@ praw
 psycopg2-binary
 tensorflow
 scikit-learn
-python-dotenv
