@@ -1,0 +1,5 @@
+{
+  "BBC_RSS_FEED": "https://feeds.bbci.co.uk/news/business/rss.xml",
+  "CNBC_RSS_FEED": "https://www.cnbc.com/id/10000664/device/rss/rss.html",
+  "MAIN_SERVER_URL": "http://127.0.0.1:8000/report"
+}

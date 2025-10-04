@@ -1,0 +1,92 @@
+[
+  {
+    "name": "High Whale Inflow + Negative Sentiment -> Bearish Alert",
+    "priority": 1,
+    "conditions": {
+      "all": [
+        {
+          "fact": "whale_inflow_btc",
+          "operator": "greaterThanInclusive",
+          "value": 2000
+        },
+        {
+          "fact": "recent_sentiment_score",
+          "operator": "lessThan",
+          "value": -0.3
+        }
+      ]
+    },
+    "event": {
+      "type": "alert",
+      "params": {
+        "level": "critical",
+        "message": "⚠️ BEARISH ALERT: Significant whale inflow ({whale_inflow_btc} BTC) to exchanges combined with strong negative market sentiment ({recent_sentiment_score_formatted}). High risk of a price drop."
+      }
+    }
+  },
+  {
+    "name": "High Whale Outflow + Positive Sentiment -> Bullish Alert",
+    "priority": 1,
+    "conditions": {
+      "all": [
+        {
+          "fact": "whale_outflow_btc",
+          "operator": "greaterThanInclusive",
+          "value": 2000
+        },
+        {
+          "fact": "recent_sentiment_score",
+          "operator": "greaterThan",
+          "value": 0.3
+        }
+      ]
+    },
+    "event": {
+      "type": "alert",
+      "params": {
+        "level": "critical",
+        "message": "🚀 BULLISH ALERT: Significant whale outflow ({whale_outflow_btc} BTC) from exchanges combined with strong positive market sentiment ({recent_sentiment_score_formatted}). High potential for a price rally."
+      }
+    }
+  },
+  {
+    "name": "AI Predicts Strong Trend",
+    "priority": 2,
+    "conditions": {
+      "any": [
+        {
+          "fact": "ai_prediction_confidence",
+          "operator": "greaterThan",
+          "value": 0.85
+        }
+      ]
+    },
+    "event": {
+      "type": "alert",
+      "params": {
+        "level": "high",
+        "message": "🧠 AI PREDICTION: Gemini model predicts a **{ai_prediction_trend}** trend with {ai_prediction_confidence_formatted} confidence. Reason: '{ai_prediction_comment}'"
+      }
+    }
+  },
+  {
+    "name": "Volatility Spike",
+    "priority": 3,
+    "conditions": {
+      "any": [
+        {
+          "fact": "market_volatility_pct",
+          "operator": "greaterThanInclusive",
+          "value": 2.5
+        }
+      ]
+    },
+    "event": {
+      "type": "alert",
+      "params": {
+        "level": "medium",
+        "message": "⚡️ MARKET ALERT: High volatility detected. BTC price changed by {market_volatility_pct_formatted} in the last minute."
+      }
+    }
+  }
+]

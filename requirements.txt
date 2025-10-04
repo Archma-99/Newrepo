@@ -1,9 +1,0 @@
-ccxt
-pandas
-pandas-ta
-feedparser
-vaderSentiment
-praw
-psycopg2-binary
-tensorflow
-scikit-learn

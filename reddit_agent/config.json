@@ -1,0 +1,7 @@
+{
+  "REDDIT_CLIENT_ID": "YOUR_CLIENT_ID",
+  "REDDIT_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
+  "REDDIT_USER_AGENT": "CryptoSentinel AI Agent v1.0",
+  "SUBREDDITS": ["Bitcoin", "CryptoCurrency"],
+  "MAIN_SERVER_URL": "http://127.0.0.1:8000/report"
+}
